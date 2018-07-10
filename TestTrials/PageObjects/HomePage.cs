@@ -1,16 +1,17 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TestTrials.PageObjects
 {
     class HomePage
     {
-        private const string V = "]/div[1]/div[2]/div/div[3]/div/div/div/div[1]";
         private IWebDriver driver;
 
         public HomePage(IWebDriver driver)
@@ -43,20 +44,35 @@ namespace TestTrials.PageObjects
         [FindsBy(How = How.ClassName, Using = "c2-calendar-footer__inner-wrap")]
         private IWebElement date;
 
-        [FindsBy(How = How.XPath, Using = V)]
-        private IWebElement trigger;
-
         [FindsBy(How = How.ClassName, Using = "sb-searchbox__button")]
         private IWebElement submitButton;
 
+        [FindsBy(How = How.ClassName, Using = "bui-checkbox")]
+        private IList<IWebElement> checkBox;
+
+        [FindsBy(How = How.ClassName, Using = "xp__dates")]
+        private IList<IWebElement> calendarTree;
+
+        /// <summary>
+        /// Fills out the form with test data
+        /// </summary>
+        /// <param name="city"></param>
+        /// <param name="checkinYear"></param>
+        /// <param name="checkinMonth"></param>
+        /// <param name="checkinDay"></param>
+        /// <param name="checkoutYear"></param>
+        /// <param name="checkoutMonth"></param>
+        /// <param name="checkoutDay"></param>
         public void SetFields(string city, 
             string checkinYear,  string checkinMonth,  string checkinDay, 
             string checkoutYear, string checkoutMonth, string checkoutDay)
         {
             driver.Navigate().GoToUrl("https://www.booking.com/");
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("document.getElementsByClassName('xp__dates xp__group')[0].setAttribute('data-calendar-shown', '1')");
-        
+
+            //Making sure that calendar is not hidden
+            calendarTree[0].Click();
+
             // Setting up checkout date
             this.checkoutYear.SendKeys(checkoutYear);
             this.checkoutMonth.SendKeys(checkoutMonth);
@@ -67,10 +83,21 @@ namespace TestTrials.PageObjects
             this.checkinDay.SendKeys(checkinDay);
             this.checkinYear.SendKeys(checkinYear);
 
+            //Setting up the destination(no need for auto-completion)
             this.cityInput.SendKeys(city);
-
         }
 
+        /// <summary>
+        /// Verifies whether check box for traveling for work has been checked
+        /// </summary>
+        public void IsTravelForForWork()
+        {
+            this.checkBox[0].Click();
+        }
+
+        /// <summary>
+        /// Presses the button that navigates to the results page
+        /// </summary>
         public void InitiateSearch()
         {
             this.submitButton.Click();

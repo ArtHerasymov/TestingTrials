@@ -59,7 +59,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookingTest.cs" />
+    <Compile Include="AdditionalTest.cs" />
+    <Compile Include="EuropeTest.cs" />
+    <Compile Include="NewYorkTest.cs" />
     <Compile Include="PageObjects\HomePage.cs" />
     <Compile Include="PageObjects\ResultPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
